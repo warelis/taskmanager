@@ -1,5 +1,6 @@
 package tm.pl.taskmanager.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import tm.pl.taskmanager.Status;
@@ -22,4 +23,9 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private List<Task> tasks = new ArrayList<>();
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
+    private User user;
 }
