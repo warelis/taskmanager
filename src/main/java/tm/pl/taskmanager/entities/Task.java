@@ -7,6 +7,7 @@ import tm.pl.taskmanager.Status;
 
 @Entity
 @Data
+@Table (name = "Tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -7,6 +7,8 @@ import tm.pl.taskmanager.entities.Task;
 import tm.pl.taskmanager.repositories.ProjectRepository;
 import tm.pl.taskmanager.repositories.TaskRepository;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/task")
 @RequiredArgsConstructor
@@ -23,5 +25,13 @@ public class TaskController {
         project.getTasks().add(save);
         projectRepository.saveAndFlush(project);
         return save;
+    }
+    @GetMapping
+    public List<Task> getAll(){
+       return taskRepository.findAll();
+    }
+    @DeleteMapping("/{project_id}")
+    private void deleteById(@PathVariable Long project_id){
+        taskRepository.deleteById(project_id);
     }
 }

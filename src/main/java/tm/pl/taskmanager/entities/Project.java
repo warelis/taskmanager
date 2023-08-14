@@ -6,12 +6,11 @@ import lombok.Data;
 import tm.pl.taskmanager.Status;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
+@Table (name = "Projects")
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,5 +26,5 @@ public class Project {
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "user_id")
-    private User user;
+    private User users;
 }
