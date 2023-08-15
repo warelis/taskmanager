@@ -1,6 +1,9 @@
 package tm.pl.taskmanager.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tm.pl.taskmanager.entities.Project;
 import tm.pl.taskmanager.entities.User;
@@ -15,21 +18,42 @@ public class ProjectController {
 
     private final tm.pl.taskmanager.repositories.ProjectRepository projectRepository;
     private final UserRepository userRepository;
+
     @PostMapping("/{user_id}")
-    private Project addProject(@PathVariable Long user_id, @RequestBody Project project){
+    private ResponseEntity<Project> addProject(@PathVariable Long user_id, @RequestBody Project project){
+
         User user = userRepository.findById(user_id).orElse(null);
+        if (user_id == null){
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         project.setUsers(user);
         Project save = projectRepository.saveAndFlush(project);
         user.getProjects().add(save);
         userRepository.saveAndFlush(user);
-        return save;
+        return ResponseEntity.ok(save);
     }
     @GetMapping
-    public List<Project> getAll(){
-        return projectRepository.findAll();
+    private ResponseEntity<List<Project>> getAll(){
+        List<Project> projects = projectRepository.findAll();
+        return ResponseEntity.ok(projects);
     }
     @DeleteMapping("/{project_id}")
-    private void deleteById(@PathVariable Long project_id){
-        projectRepository.deleteById(project_id);
+    private ResponseEntity<String> deleteById(@PathVariable Long project_id){
+        try{
+            projectRepository.deleteById(project_id);
+            return ResponseEntity.ok("Project deleted succesfully");
+        }catch(EmptyResultDataAccessException exc){
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("Project not found");
+        }
+    }
+
+    @PutMapping("/{project_id}")
+    private void projectUpdate(){
+
+    }
+
+    @PutMapping("/{project_id}")
+    private void statusChange(){
+
     }
 }
